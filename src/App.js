@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Appy from './piano.jsx'
+import MyPiano from './piano.jsx';
 
 class App extends Component {
   render() {
@@ -7,7 +7,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           
-          {Appy()}
+          <MyPiano />
           
 
         </header>
