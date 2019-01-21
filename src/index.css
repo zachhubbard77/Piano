@@ -1,3 +1,8 @@
+@font-face {
+  font-family: celeb;
+  src: url(./fonts/Celeb_Faces.ttf);
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -18,3 +23,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.title {
+  background: url(./img/gold.png) no-repeat;
+  background-size: cover;
+  font-size: 40px;
+	color: #fff;
+	text-align: center;
+	padding: 1em;
+	/* -webkit-background-clip clips the background of the element to the text */
+	-webkit-text-fill-color: transparent; /* overrides the white text color in webkit browsers */
+  -webkit-background-clip: text;
+  font-family: cursive;
+}
+
+.container {
+  width: 90%;
+  position:absolute;
+  bottom:0px;
+  right:25%;
+  left:50%;
+  transform: translateX(-50%);
+  box-shadow: 10px -5px black;
+}
+
+.nick {
+  font-family: celeb;
+  font-size: 6em;
+  margin-left: 30px;
+}
+
+

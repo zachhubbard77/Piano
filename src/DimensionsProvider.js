@@ -6,7 +6,8 @@ class DimensionsProvider extends React.Component {
     return (
       <div>
         {this.props.children({
-          containerWidth: this.props.containerWidth,
+          containerWidth:
+          this.props.containerWidth,
           containerHeight: this.props.containerHeight,
         })}
       </div>

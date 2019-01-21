@@ -22,6 +22,10 @@ const keyboardShortcuts = KeyboardShortcuts.create({
 function MyPiano() {
   return (
     <div>
+      <div>
+        {/* <p className="nick">n</p> */}
+        <h3 className="title">PianOthon</h3>
+      </div>
       <div className="mt-5">
         <ResponsivePiano />
       </div>
@@ -31,26 +35,28 @@ function MyPiano() {
 
 function ResponsivePiano(props) {
   return (
-    <DimensionsProvider>
-      {({ containerWidth, containerHeight }) => (
-        <SoundfontProvider
-          instrumentName="acoustic_grand_piano"
-          audioContext={audioContext}
-          hostname={soundfontHostname}
-          render={({ isLoading, playNote, stopNote }) => (
-            <Piano
-              noteRange={noteRange}
-              width={containerWidth}
-              playNote={playNote}
-              stopNote={stopNote}
-              disabled={isLoading}
-              keyboardShortcuts={keyboardShortcuts}
-              {...props}
-            />
-          )}
-        />
-      )}
-    </DimensionsProvider>
+    <div className="container">
+      <DimensionsProvider>
+        {({ containerWidth, containerHeight }) => (
+          <SoundfontProvider
+            instrumentName="acoustic_grand_piano"
+            audioContext={audioContext}
+            hostname={soundfontHostname}
+            render={({ isLoading, playNote, stopNote }) => (
+              <Piano
+                noteRange={noteRange}
+                width={containerWidth}
+                playNote={playNote}
+                stopNote={stopNote}
+                disabled={isLoading}
+                keyboardShortcuts={keyboardShortcuts}
+                {...props}
+              />
+            )}
+          />
+        )}
+      </DimensionsProvider>
+    </div>
   );
 }
 
