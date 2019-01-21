@@ -3,7 +3,6 @@ import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
 import 'react-piano/dist/styles.css';
 import DimensionsProvider from './DimensionsProvider';
 import SoundfontProvider from './SoundfontProvider'
-
   
 // webkitAudioContext fallback needed to support Safari
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -23,7 +22,6 @@ function MyPiano() {
   return (
     <div>
       <div>
-        {/* <p className="nick">n</p> */}
         <h3 className="title">PianOthon</h3>
       </div>
       <div className="mt-5">
@@ -57,6 +55,7 @@ function ResponsivePiano(props) {
         )}
       </DimensionsProvider>
     </div>
+    
   );
 }
 
