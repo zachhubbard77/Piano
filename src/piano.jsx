@@ -103,8 +103,8 @@ class myPiano extends React.Component {
   render() {
     return (
       <div>
-        <h1 className="h3">react-piano recording + playback demo</h1>
-        <div className="mt-5">
+        <h1 className="title">Pian-O-thon</h1>
+        <div className="buttons">
           <button onClick={this.onClickPlay}>Play</button>
           <button onClick={this.onClickStop}>Stop</button>
           <button onClick={this.onClickClear}>Clear</button>
