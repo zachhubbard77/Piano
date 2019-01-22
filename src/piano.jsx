@@ -6,7 +6,7 @@ import 'react-piano/dist/styles.css';
 import DimensionsProvider from './DimensionsProvider';
 import SoundfontProvider from './SoundfontProvider';
 import PianoWithRecording from './PianoWithRecording';
-  
+
 // webkitAudioContext fallback needed to support Safari
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const soundfontHostname = 'https://d1pzp51pvbm36p.cloudfront.net';
@@ -105,33 +105,38 @@ class myPiano extends React.Component {
       <div>
         <h1 className="h3">react-piano recording + playback demo</h1>
         <div className="mt-5">
-          <SoundfontProvider
-            instrumentName="acoustic_grand_piano"
-            audioContext={audioContext}
-            hostname={soundfontHostname}
-            render={({ isLoading, playNote, stopNote }) => (
-              <PianoWithRecording
-                recording={this.state.recording}
-                setRecording={this.setRecording}
-                noteRange={noteRange}
-                width={300}
-                playNote={playNote}
-                stopNote={stopNote}
-                disabled={isLoading}
-                keyboardShortcuts={keyboardShortcuts}
-              />
-            )}
-          />
-        </div>
-        <div className="mt-5">
           <button onClick={this.onClickPlay}>Play</button>
           <button onClick={this.onClickStop}>Stop</button>
           <button onClick={this.onClickClear}>Clear</button>
         </div>
         <div className="mt-5">
+          <DimensionsProvider>
+            {({ containerWidth, containerHeight }) => (
+              <SoundfontProvider
+                instrumentName="acoustic_grand_piano"
+                audioContext={audioContext}
+                hostname={soundfontHostname}
+                render={({ isLoading, playNote, stopNote }) => (
+                  <PianoWithRecording
+                    recording={this.state.recording}
+                    setRecording={this.setRecording}
+                    noteRange={noteRange}
+                    width={containerWidth}
+                    playNote={playNote}
+                    stopNote={stopNote}
+                    disabled={isLoading}
+                    keyboardShortcuts={keyboardShortcuts}
+                  />
+                )}
+              />
+            )}
+          </DimensionsProvider>
+        </div>
+
+        {/* <div className="mt-5">
           <strong>Recorded notes</strong>
           <div>{JSON.stringify(this.state.recording.events)}</div>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -190,7 +195,7 @@ export default myPiano;
 //         )}
 //       </DimensionsProvider>
 //     </div>
-    
+
 //   );
 // }
 
