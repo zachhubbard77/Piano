@@ -1,10 +1,12 @@
 import React from 'react'
-import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
+// import ReactDOM from 'react-dom'
+import _ from 'lodash';
+import { KeyboardShortcuts, MidiNumbers } from 'react-piano';
 import 'react-piano/dist/styles.css';
 import DimensionsProvider from './DimensionsProvider';
-import SoundfontProvider from './SoundfontProvider'
+import SoundfontProvider from './SoundfontProvider';
+import PianoWithRecording from './PianoWithRecording';
 
-  
 // webkitAudioContext fallback needed to support Safari
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const soundfontHostname = 'https://d1pzp51pvbm36p.cloudfront.net';
@@ -19,82 +21,120 @@ const keyboardShortcuts = KeyboardShortcuts.create({
   keyboardConfig: KeyboardShortcuts.HOME_ROW,
 });
 
-function MyPiano() {
-  return (
-    <div>
-      <div>
-        {/* <p className="nick">n</p> */}
-        <h3 className="title">PianOthon</h3>
-      </div>
-      <div className="mt-5">
-        <ResponsivePiano />
-      </div>
-    </div>
-  );
-}
+class myPiano extends React.Component {
+  state = {
+    recording: {
+      mode: 'RECORDING',
+      events: [],
+      currentTime: 0,
+      currentEvents: [],
+    },
+  };
 
-function ResponsivePiano(props) {
-  return (
-    <div className="container">
-      <DimensionsProvider>
-        {({ containerWidth, containerHeight }) => (
-          <SoundfontProvider
-            instrumentName="acoustic_grand_piano"
-            audioContext={audioContext}
-            hostname={soundfontHostname}
-            render={({ isLoading, playNote, stopNote }) => (
-              <Piano
-                noteRange={noteRange}
-                width={containerWidth}
-                playNote={playNote}
-                stopNote={stopNote}
-                disabled={isLoading}
-                keyboardShortcuts={keyboardShortcuts}
-                {...props}
+  constructor(props) {
+    super(props);
+
+    this.scheduledEvents = [];
+  }
+
+  getRecordingEndTime = () => {
+    if (this.state.recording.events.length === 0) {
+      return 0;
+    }
+    return Math.max(
+      ...this.state.recording.events.map(event => event.time + event.duration),
+    );
+  };
+
+  setRecording = value => {
+    this.setState({
+      recording: Object.assign({}, this.state.recording, value),
+    });
+  };
+
+  onClickPlay = () => {
+    this.setRecording({
+      mode: 'PLAYING',
+    });
+    const startAndEndTimes = _.uniq(
+      _.flatMap(this.state.recording.events, event => [
+        event.time,
+        event.time + event.duration,
+      ]),
+    );
+    startAndEndTimes.forEach(time => {
+      this.scheduledEvents.push(
+        setTimeout(() => {
+          const currentEvents = this.state.recording.events.filter(event => {
+            return event.time <= time && event.time + event.duration > time;
+          });
+          this.setRecording({
+            currentEvents,
+          });
+        }, time * 1000),
+      );
+    });
+    // Stop at the end
+    setTimeout(() => {
+      this.onClickStop();
+    }, this.getRecordingEndTime() * 1000);
+  };
+
+  onClickStop = () => {
+    this.scheduledEvents.forEach(scheduledEvent => {
+      clearTimeout(scheduledEvent);
+    });
+    this.setRecording({
+      mode: 'RECORDING',
+      currentEvents: [],
+    });
+  };
+
+  onClickClear = () => {
+    this.onClickStop();
+    this.setRecording({
+      events: [],
+      mode: 'RECORDING',
+      currentEvents: [],
+      currentTime: 0,
+    });
+  };
+
+  render() {
+    return (
+      <div className="container">
+        <h1 className="title">Pian-O-thon</h1>
+        <div className="buttons">
+          <button onClick={this.onClickPlay}>Play</button>
+          <button onClick={this.onClickStop}>Stop</button>
+          <button onClick={this.onClickClear}>Clear</button>
+        </div>
+        <div>
+          <DimensionsProvider>
+            {({ containerWidth, containerHeight }) => (
+              <SoundfontProvider
+                instrumentName="acoustic_grand_piano"
+                audioContext={audioContext}
+                hostname={soundfontHostname}
+                render={({ isLoading, playNote, stopNote }) => (
+                  <PianoWithRecording className="testing"
+                    recording={this.state.recording}
+                    setRecording={this.setRecording}
+                    noteRange={noteRange}
+                    width={containerWidth}
+                    playNote={playNote}
+                    stopNote={stopNote}
+                    disabled={isLoading}
+                    keyboardShortcuts={keyboardShortcuts}
+                  />
+                )}
               />
             )}
-          />
-        )}
-      </DimensionsProvider>
-    </div>
-  );
+          </DimensionsProvider>
+        </div>
+      </div>
+    );
+  }
 }
 
-
-
-
-
-
-
-
-  // function MyPiano() {
-  //   const firstNote = MidiNumbers.fromNote('c3');
-  //   const lastNote = MidiNumbers.fromNote('f5');
-  //   const keyboardShortcuts = KeyboardShortcuts.create({
-  //     firstNote: firstNote,
-  //     lastNote: lastNote,
-  //     keyboardConfig: KeyboardShortcuts.HOME_ROW,
-  //   });
-   
-  //   return (
-  //     <Piano
-  //       noteRange={{ first: firstNote, last: lastNote }}
-  //       playNote={(midiNumber) => {
-  //         // Play a given note - see notes below
-  //       }}
-  //       stopNote={(midiNumber) => {
-  //         // Stop playing a given note - see notes below
-  //       }}
-  //       width={1000}
-  //       keyboardShortcuts={keyboardShortcuts}
-  //     />
-  //   );
-  // }
-
-
-
-
-
-
-
-export default MyPiano
+export default myPiano;
