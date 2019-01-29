@@ -60,7 +60,7 @@ class PianoWithRecording extends React.Component {
     const activeNotes =
       mode === 'PLAYING' ? currentEvents.map(event => event.midiNumber) : null;
     return (
-      <div className="container">
+      <div>
         <Piano
           playNote={this.props.playNote}
           stopNote={this.props.stopNote}

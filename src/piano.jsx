@@ -102,14 +102,14 @@ class myPiano extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <h1 className="title">Pian-O-thon</h1>
         <div className="buttons">
           <button onClick={this.onClickPlay}>Play</button>
           <button onClick={this.onClickStop}>Stop</button>
           <button onClick={this.onClickClear}>Clear</button>
         </div>
-        <div className="mt-5">
+        <div>
           <DimensionsProvider>
             {({ containerWidth, containerHeight }) => (
               <SoundfontProvider
@@ -117,7 +117,7 @@ class myPiano extends React.Component {
                 audioContext={audioContext}
                 hostname={soundfontHostname}
                 render={({ isLoading, playNote, stopNote }) => (
-                  <PianoWithRecording
+                  <PianoWithRecording className="testing"
                     recording={this.state.recording}
                     setRecording={this.setRecording}
                     noteRange={noteRange}
@@ -132,71 +132,9 @@ class myPiano extends React.Component {
             )}
           </DimensionsProvider>
         </div>
-
-        {/* <div className="mt-5">
-          <strong>Recorded notes</strong>
-          <div>{JSON.stringify(this.state.recording.events)}</div>
-        </div> */}
       </div>
     );
   }
 }
 
 export default myPiano;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function MyPiano() {
-//   return (
-//     <div>
-//       <div>
-//         <h3 className="title">PianOthon</h3>
-//       </div>
-//       <div className="mt-5">
-//         <ResponsivePiano />
-//       </div>
-//     </div>
-//   );
-// }
-
-// function ResponsivePiano(props) {
-//   return (
-//     <div className="container">
-//       <DimensionsProvider>
-//         {({ containerWidth, containerHeight }) => (
-//           <SoundfontProvider
-//             instrumentName="acoustic_grand_piano"
-//             audioContext={audioContext}
-//             hostname={soundfontHostname}
-//             render={({ isLoading, playNote, stopNote }) => (
-//               <Piano
-//                 noteRange={noteRange}
-//                 width={containerWidth}
-//                 playNote={playNote}
-//                 stopNote={stopNote}
-//                 disabled={isLoading}
-//                 keyboardShortcuts={keyboardShortcuts}
-//                 {...props}
-//               />
-//             )}
-//           />
-//         )}
-//       </DimensionsProvider>
-//     </div>
-
-//   );
-// }
-
-// export default MyPiano
